@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>sign in</title>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+</head>
+
+<style>
+
+    .error-box {
+         display: none; font-weight: bold;
+    }
+    .error-box > span {
+        color: blue;
+    }
+
+</style>
+<body>
+
+    <h2>로그인 페이지</h2>
+
+    <ul>
+        <li> <a href="/user/signup"> 회원가입 페이지로 가기</a></li>
+        <li> <a href="/"> 홈으로 가기 </a></li>
+    </ul>
+    <div class="form-box"> 
+        <form name="register" oninput="errorReset()">
+            <fieldset>
+                <legend>로그인</legend>
+                <label for="id">아이디 : </label>
+                <input type="text" placeholder="id" name="id" id="id" required /> <br/>
+                <label for="pw">비밀번호 : </label>
+                <input type="password" placeholder="pw" name="pw" id="pw" required /><br/>
+                <button type="button" onclick="axiosPost()">로그인</button>
+            </fieldset>
+        </form>
+        <br/>
+    </div>
+    <div class="error-box"></div>
+
+    <script>    
+
+        function errorReset() { 
+
+            let errorBox = document.querySelector('.error-box');
+            if (errorBox.style.display === 'block') {
+                errorBox.style.display = 'none';
+            }
+        }
+
+        async function axiosPost () {
+  
+            const form = document.forms['register'];
+           
+                 /** 예외처리 */
+            if (form.id.value === "" ) {
+                alert('아이디 입력해주세요.')
+                return;
+            }
+            if (form.pw.value === "" ) {
+                alert('비밀번호 입력해주세요.')
+                return;
+            }
+
+            let data = {
+                    userid: form.id.value,
+                    pw: form.pw.value,
+            }
+
+            const res = await axios({
+                method:'POST',  
+                url:'/user/signin',
+                data
+            })
+
+            if (res.data && res.data.resultcode) {
+                 /** 
+                 * resultcode : 00 = DBerror, 01 = 없는아이디, 02 = 비밀번호 틀림, 03 = backError 20 = 로그인 성공  
+                 */
+                console.log('res', res)
+                 if (res.data.resultcode === '20') {
+                    alert('로그인 하였습니다.');
+               
+                    window.location.href = '/'
+                 } else { //error
+                  
+                    let errorBox = document.querySelector('.error-box');
+                    errorBox.style.display = 'block';
+                    if (res.data.resultcode === '01') {
+                        errorBox.innerHTML =`<p style="color: red;" >없는 아이디입니다.</p>`;
+                    } else if (res.data.resultcode === '02') {
+                        errorBox.innerHTML =`<p style="color: red;" >비밀번호가 다릅니다.</p>`;
+                    } else {
+                        alert('잠시 후에 사요오해주세요.')
+                    }
+                 }
+
+            }
+        }
+
+    </script>
+</html>

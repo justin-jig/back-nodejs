@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>index</title>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+</head>
+<body>  
+
+    <div id="indexWrap">
+        <h2>안녕하세요.</h2>
+        <a href="/user"> 유저 페이지 </a>
+      
+    </div>
+
+    <script src="../function/cookie.js"></script>
+    <script>
+
+        (function(){
+
+            const cookieSplit = document.cookie.split(';');
+            const cookieObj = {};
+
+            new Promise((resolve, reject) => {
+                for (let i = 0; i < cookieSplit.length; i++) {
+                    let cookieSplit2 = cookieSplit[i].split('=')
+                    cookieObj[cookieSplit2[0].trim()] = cookieSplit2[1];
+                }
+                resolve('');
+            }).then(() => {
+                if (cookieObj.token && cookieObj.userid ) {
+                    getProfile(cookieObj.userid);
+                }
+              
+            }).catch(() => {
+                tokenDelete();
+            })
+        })()
+
+
+         async function getProfile (userid) {
+            const res = await axios({
+                method:'GET',  
+                url:`/user/getUser?userid=${userid}`,
+            })  
+
+            if (res.data && res.data.resultcode === '20') {
+
+                document.getElementById('indexWrap').innerHTML = `
+                    <h2>안녕하세요. ${res.data.user.name} 환영합니다.</h2>
+                    <a href="/user/profile"> 유저 페이지 </a><br/><br/>
+                    <button onclick="logout()"> 로그아웃 </button>
+                `
+            } else {
+                tokenDelete();
+            }
+        }
+
+        function tokenDelete () {
+
+            document.cookie = encodeURIComponent('token') + '=; expires=Thu, 01 JAN 1999 00:00:10 GMT'
+            document.cookie = encodeURIComponent('userid') + '=; expires=Thu, 01 JAN 1999 00:00:10 GMT'
+
+        }
+
+        async function logout  () {
+            if(!confirm('로그아웃 하시겠습니까?')) return;
+          
+            const res = await axios({
+                method:'POST',  
+                url:`/user/logout`,
+            }).then(() => {
+                tokenDelete();
+                window.localStorage.removeItem('userid');
+                window.location.reload();
+            }).catch(() => {
+                alert('잠시후에 사용해주세요.');
+            })
+        }
+
+    </script>
+</body>
+</html>

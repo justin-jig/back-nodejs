@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>chat Room</title>
+    <script src="/socket.io/socket.io.js"></script>
+</head>
+<style>
+    ul {
+        width: 350px;
+        height: 450px;
+        overflow: auto;
+        overflow-x: hidden;
+        box-sizing: border-box;
+        padding: 1em;
+        background-color: skyblue;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+    }
+    ul > li {
+        list-style: none;
+        background-color: rgb(255, 200, 3);   width: 130px;
+        min-height: 25px; padding: 0.5em;
+        border-radius: 4px; font-size: 0.8em;
+        display: flex; margin-bottom: 15px;
+        clear: both; align-items: center;
+        
+    }
+    ul > .create {
+        width: 100%;
+        background: transparent; padding: 0;
+        justify-content: center;
+    }
+    ul > .right {
+        background-color: #fff;
+        float: right;
+    }
+    ul > .right::after {
+        clear: both;
+    }
+    
+</style>
+
+<body>
+
+    <ul></ul>
+    <form id="chat">
+        <input type="text" id="message" placeholder="채팅내용" />
+        <button type="submit">보내기</button>
+        <button type="button" onclick=""> 나가기 </button>
+    </form>
+    
+    <script>
+
+        const id = Math.floor(Math.random()* 1000);
+        console.log(id);
+        const chatFrom = document.querySelector('#chat');
+        const ul = document.querySelector('ul');
+        const socket = io();
+        const chatRoom = prompt("채팅방명을 입력하세요.");
+        socket.emit("join", chatRoom);
+
+        // 브라우저
+        socket.on('create', (res) => {
+            console.log('res', res)
+            const li = document.createElement('li');
+            li.textContent = res;
+            li.classList = "create";
+            ul.appendChild(li);
+        })
+
+        //서버에서 보내주는 값
+        socket.on('chat', (res) => {
+            console.log('res', res)
+            const li = document.createElement('li');
+            if(res.id != id) li.classList = "right";
+            li.textContent = res.msg;
+            ul.appendChild(li);
+        })
+
+        // 룸 이벤트
+        chatFrom.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const msg = chatFrom.querySelector('#message');
+            socket.emit('message',  {id:id , msg :msg.value});
+            msg.value = "";
+        })
+
+        function leave() {
+            console.log('leave');
+            socket.emit('leave');
+        }
+
+    </script>
+    
+</body>
+</html>

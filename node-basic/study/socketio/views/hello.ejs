@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hellow</title>
+    <script src="/socket.io/socket.io.js"></script>
+</head>
+
+<body>
+
+    <h1>Hello Wolrd!</h1>
+    <button onclick="eventOnclick('hello')">hello</button>
+    <button onclick="eventOnclick('study')">study</button>
+    <button onclick="eventOnclick('bye')">bye</button>
+    <br/><br/><br/>
+
+    <div id="result"></div>
+
+    <script>
+        
+        const socket = io();
+        
+        function eventOnclick(kind) {
+            // 이벤트 생성
+            socket.emit("button_message", { kind:kind });
+        }
+
+        socket.on("backend_button_message", (arg) => {
+                console.log(arg);
+                const restult = document.getElementById('result');
+                restult.innerHTML = `${arg.kind} : ${arg.msg}`;     
+        })
+
+    </script>
+</body>
+</html>

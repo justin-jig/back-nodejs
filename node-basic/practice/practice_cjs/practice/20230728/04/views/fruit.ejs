@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>20230713_jqurey 실습1</title>
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js" integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href ='public/css/fruit.css'/>
+
+</head>
+
+<body>
+
+    <div class="navigation">
+        <a href="/">home</a>
+        <a href="./fruit">fruit</a>
+        <a href="./larva">larva</a>
+        <a href="./multiplicationTables">multiplicationTables</a>
+    </div>
+    
+    <div class="container">
+        <div class="image-box">
+            <div class="default">을<br/>골라볼게요</div>
+        </div>
+        <div class="btn-box">
+            <% for( let i = 0; i < fruit.length; i++){ %>
+                <button type="button" onclick="imageChange('<%= fruit[i].name %>')"><%= fruit[i].kor %></button>
+            <% } %>
+
+        </div>
+    </div>
+    <script type="application/javascript" src="public/js/fruit.js" ></script>
+
+</body>
+</html>

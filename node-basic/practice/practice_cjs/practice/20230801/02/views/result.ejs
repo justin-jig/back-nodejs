@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Result</title>
+</head>
+<style>
+
+    span {
+        color: blue;
+        font-weight: 700;
+    }
+</style>
+<body>
+
+        <h1><%= title %></h1>
+
+        <div>
+            <span><%= formData.name %></span>님 환영합니다.
+        </div>
+
+        <div>
+            성별은
+            <span> <%= formData.gender === 'man' && '남자' || formData.gender === 'woman' && '여자' %> </span>
+            이군요!
+        </div>
+    
+        <div>
+            <span> <%= formData.birth %> </span> 에 태어나셨군요!
+        </div>
+
+        <div>
+            관심사가 <%= formData.interest === '' ? '관심사가 없으시군요!' : '' %> 
+            <span><%= formData.interest != '' ? formData.interest + '이군요!' : '' %> </p>
+        </div>
+        
+        <div>
+            좋아하는 컬러는
+            <div style="width: 10px; height: 10px; display: inline-block;" id="fvColor"></div> 
+            이군요!
+        </div>
+        <div>
+            좋아하는 숫자는 <%= formData.fvNumber === '' ? '없으시군요!' : '' %> 
+            <span><%= formData.fvNumber != '' ? formData.fvNumber + '이군요!' : '' %> </p>
+        </div>
+
+        <br/>
+        <a href="/">홈으로 이동</a>
+
+        <script>
+            document.getElementById('fvColor').style.backgroundColor  = '<%= formData.fvColor %>';
+        </script>
+</body>
+</html>

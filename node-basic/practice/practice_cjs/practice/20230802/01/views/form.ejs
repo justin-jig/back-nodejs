@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>form</title>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+</head>
+
+<style>
+
+    .result-box {
+         display: none;
+    }
+    .result-box > span {
+        color: blue;
+    }
+
+</style>
+<body>
+
+    <div class="form-box"> 
+        <h1><%= title %></h1>
+        <form name="register" id="register">
+            <div>
+                <label for="name">이름</label>
+                <input type="text" placeholder="name" name="name" id="name" required />
+            </div>
+
+            <fieldset>
+                <legend>성별</legend>
+                <input type="radio" name="gender" id="man" value="man" required/>
+                <label id="man">남자</label>
+                <input type="radio" name="gender" value="woman" id="woman" required/>
+                <label id="woman">여자</label>
+            </fieldset>
+            <br/>
+            <fieldset>
+                <legend>생년월일</legend>
+                <select name="birthYear" id="year">
+                    <% for( let i = 1980; i <=2000; i++) { %>
+                    <option value="<%= i %>"><%= i %></option>
+                    <% } %>
+                </select>
+                <label for="year">년</label>
+                <select name="birthMonth" id="month">
+                    <% for( let i = 1; i <=12; i++) { %>
+                    <option value="<%= i %>"><%= i %></option>
+                    <% } %>
+                </select>
+                <label for="month">월</label>
+                <select name="birthDay" id="day">
+                    <% for(let i=1; i<=31; i++) { %>
+                    <option value="<%= i %>"><%= i %></option>
+                    <% } %>
+                </select>
+                <label for="day">일</label>
+            </fieldset>
+            <br/>
+            <fieldset>
+                <legend>관심사</legend>
+                <input type="checkbox" name="interest" id="trip" value="여행" />
+                <label for="trip">여행</label>
+                <input type="checkbox" name="interest" id="fashion" value="패션" />
+                <label for="fashion">패션</label>
+                <input type="checkbox" name="interest" id="food" value="음식" />
+                <label for="food">음식</label>
+            </fieldset>
+            <br/>
+
+            <button type="button" onclick="axiosPost()">회원가입</button>
+        </form>
+
+    </div>
+
+    <div class="result-box" ></div>
+
+    <script>
+
+        async function axiosPost () {
+            console.log('axios get')
+            const form = document.forms['register'];
+            const formId = document.getElementById('register')
+
+            let data = {
+                    name: form.name.value,
+                    gender: form.gender.value,
+                    birthYear: form.birthYear.value,
+                    birthMonth: form.birthMonth.value,
+                    birthDay : form.birthDay.value, 
+                    interest : ""
+            }
+
+            // 관심사
+            if (form.interest.length != 0) {
+                form.interest.forEach(element => {
+                        if (element.checked === true) {
+                            data.interest += element.value;
+                        }
+                });
+            }
+
+            /** 관심사 가져오는 다른 방법 */
+            let interest = [];
+            const checked = formId.querySelectorAll('input[type = "checkbox"]:checked');
+            checked.forEach((elem) => {
+                interest.push(elem.value);
+            })
+
+            const res = await axios({
+                method:'POST',  
+                url:'/sendForm',
+                data
+            })
+
+            if (res.data) {
+
+                document.querySelector('.form-box').style.display = 'none';
+                let resultBox = document.querySelector('.result-box');
+                resultBox.style.display = 'block';
+                
+                resultBox.innerHTML =`
+                    <h1>axios post 결과</h1>
+                    <ul>
+                        <li>이름: ${res.data.formData.name}</li>
+                        <li>성별: ${res.data.formData.gender}</li>
+                                  
+                        <li>생일: ${res.data.formData.birthYear}년 ${res.data.formData.birthMonth}월 ${res.data.formData.birthDay}일 </li>
+                        <li>관심사:${res.data.formData.interest}</li>
+                    </ul>
+                    <a href="/">홈으로 이동</a>
+                `
+            }
+            console.log('data', res);
+        }
+
+    </script>
+    
+</body>
+</html>

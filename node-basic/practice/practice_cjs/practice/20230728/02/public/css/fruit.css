@@ -1,0 +1,31 @@
+body { margin: 0; padding: 0;}
+.container {
+    width: 350px; margin: auto; box-sizing: border-box;
+    padding-top: 50px;
+}
+.container > .image-box {
+    width: 350px; height: 350px; border: 10px solid orange;
+    border-radius: 15%;
+    margin-bottom: 10px;
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position: center;
+    position: relative;
+}   
+
+.container > .image-box > .default{
+    position: absolute;  text-align: center;
+    top: 50%; left: 50%; transform: translate(-50%,-50%);
+    font-size: 30px; font-weight: bold;
+}
+.container > .image-box > .default::before{
+    content: "과일"; background: yellow;
+
+}
+.container > .btn-box {
+    text-align: center;
+}
+.container > .btn-box > button {
+    background-color: #151515; cursor: pointer;
+    color: #fff; text-align: center;
+}

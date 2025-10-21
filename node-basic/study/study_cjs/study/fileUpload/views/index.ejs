@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FORM</title>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+</head>
+<body>
+
+    <h1>FORM 싱글 연습</h1>
+    <form action="/upload" method="post" enctype="multipart/form-data">
+        <input type="file" name="userfile" /> <br/>
+        <input type="text" name="title"><br/>
+        <button type="submit">업로드</button>
+    </form>
+    
+
+    <h1>FORM 멀티 연습(ver1)</h1>
+    <form action="/upload/array" method="post" enctype="multipart/form-data">
+        <input type="file" name="userfiles" multiple> <br/>
+        <input type="text" name="title"><br/>
+        <button type="submit">업로드</button>
+    </form>
+
+    <h1>FORM 멀티 연습(ver2)</h1>
+    <form action="/upload/fields" method="post" enctype="multipart/form-data">
+        <input type="file" name="userfiles1"> <br/>
+        <input type="text" name="title1"><br/>
+        <input type="file" name="userfiles2"> <br/>
+        <input type="text" name="title2"><br/>
+        <button type="submit">업로드</button>
+    </form>
+
+    <h1>동적 파일 업로드</h1>
+    
+    <div class="dynamic-box">
+        <input type="file" name="dynamic-file" id="dynamicFile" /> <br/>
+        <input type="text" name="title" id="title"> <br/>
+        <button type="button" onclick="fileupload()">업로드</button>
+    </div>
+    
+    <br/>
+
+    <div class="dynamic-result"></div>
+
+    <script>
+
+        const resultbox = document.querySelector('.dynamic-result');
+        function fileupload() {
+            
+            const file = document.getElementById('dynamicFile');        
+            console.log('file', file.files[0]);
+            const title = document.getElementById('title');
+            const formData = new FormData();
+            formData.append('title', title.value);
+            formData.append('dynamic-file',file.files[0]);
+
+            axios({
+                method:'POST',
+                url :'/dynamicFile',
+                data : formData,
+                Headers: {
+                    'Content-Type' : 'multipart/form-data'
+                }
+            }).then((res) => {
+                console.log('res', res);
+                resultbox.innerHTML = `<div><img src=${res.data.path}></div>`
+            })
+        }
+
+    </script>
+
+</body>
+</html>

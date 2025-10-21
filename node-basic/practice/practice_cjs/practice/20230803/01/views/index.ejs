@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>fileupload</title>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+</head>
+<body>
+    
+    <div class="file-upload-bpx">
+        <h5>개인정보</h5>
+
+        <form name="register">
+            <label for="id">아이디 : </label>
+            <input type="text" name="id" id="id" required><br/>
+
+            <label for="pw">비밀번호 : </label>
+            <input type="password" name="pw" id="pw" required><br/>
+
+            <label for="name">이름 : </label>
+            <input type="text" name="name" id="name" required><br/>
+
+            <label for="age">나이 : </label>
+            <input type="number" name="age" min="0" id="age" required><br/>
+
+            <label for="profile">프로필사진 : </label>
+            <input type="file" name="profile" id="profile" required><br/>
+        </form>
+
+        <button type="button" onclick="reset()">리셋</button>
+        <button type="button" onclick="join()">회원가입</button>
+    </div>
+
+    <div class="join-result"></div>
+
+    <script>
+
+        function reset () { 
+          document.forms['register'].reset();
+        }
+
+        function join () {
+
+            const form = document.forms['register'];
+            if (form.id.value === "") return alert('아이디를 확인해주세요.'); 
+            if (form.pw.value === "") return alert('비밀번호를 확인해주세요.'); 
+            if (form.name.value === "") return alert('이름을 확인해주세요.'); 
+            if (form.age.value === "") return alert('나이를 확인해주세요.'); 
+            if (form.profile.files.length === 0) return alert('파일은 적어도 1개 첨부해주세요.'); 
+
+            let formData = new FormData();
+            formData.append('id', form.id.value);
+            formData.append('pw', form.pw.value);
+            formData.append('name', form.name.value);
+            formData.append('age', form.age.value);
+            formData.append('join-profile', form.profile.files[0]);
+
+
+            axios({
+                method:'POST',
+                url : '/fileUpload',
+                data : formData,
+                headers : {
+                    'Content-Type' : 'multipart/form-data'
+                }
+
+            }).then((res) => {
+
+                console.log('res',res);
+
+                document.querySelector('.join-result').innerHTML = `
+
+                    <h1>axios post 결과</h1>
+                    <ul>
+                        <li>아이디: ${res.data.formData.id}</li>
+                        <li>이름: ${res.data.formData.name}</li>
+                        <li>나이: ${res.data.formData.age}</li>
+                        <li><p>프로필 이미지:<p> <img src="${res.data.formData.profile.path}" style="width:300px; height:300px"/></li>
+                    </ul>
+                    <a href="/">다시하기</a>
+                `;
+
+            }).catch(() => {
+                
+              return alert('잠시 후에 이용해주세요.')
+            
+            })
+
+        }
+
+
+    </script>
+
+
+</body>
+</html>

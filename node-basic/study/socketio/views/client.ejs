@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Client</title>
+    <script src="/socket.io/socket.io.js"></script>
+</head>
+
+<style>
+    ul {
+        width: 300px;
+        min-height: 300px;
+        box-sizing: border-box;
+        padding: 1em;
+        border: 1px solid #000;
+        border-radius: 5px;
+    }
+    ul > li {
+        list-style: none;
+    }
+</style>
+
+<body>
+
+    <div> Socket IO </div>
+
+    <ul>
+
+    </ul>
+    <form id="chat">
+        <input type="text" id="user" placeholder="사용자 명"/>
+        <input type="text" id="message" placeholder="채팅내용" />
+        <button type="submit">보내기</button>
+    </form>
+    
+    <script>
+
+        const chatForm = document.querySelector('#chat');
+        const ul = document.querySelector('ul');
+        const socket = io();
+
+        // 이벤트 생성
+        socket.emit("open_message", {name:'client', message:'Hello Server'},true, '안녕하세여',100);
+        // 룸 이벤트
+        chatForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const user = chatForm.querySelector('#user');
+            const msg = chatForm.querySelector('#message');
+            socket.emit('form_message', {name:user.value, message:msg.value});
+        })
+
+        socket.on("backend_message", (arg) => {
+            console.log(arg);
+            const li = document.createElement('li');
+            li.textContent = `${arg.name}: ${arg.message}`;     
+            ul.appendChild(li);
+        })
+
+    </script>
+    
+</body>
+</html>

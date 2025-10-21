@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>form</title>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+</head>
+
+<style>
+
+    .result-box {
+         display: none;
+    }
+    .result-box > span {
+        color: blue;
+    }
+
+</style>
+<body>
+
+    <div class="form-box"> 
+        <h1><%= title %></h1>
+        <form name="register">
+            <fieldset>
+                <legend>로그인</legend>
+                <label for="id">아이디 : </label>
+                <input type="text" placeholder="id" name="id" id="id" required /> <br/>
+                <label for="pw">비밀번호 : </label>
+                <input type="password" placeholder="pw" name="pw" id="pw" required /><br/>
+                <button type="button" onclick="axiosPost()">로그인</button>
+
+            </fieldset>
+        </form>
+        <span > id = test1234, pw = 1234</span>
+
+        <br/>
+    </div>
+
+    <div class="result-box" >
+
+    </div>
+
+    <script>
+
+        async function axiosPost () {
+  
+            const form = document.forms['register'];
+           
+
+                 /** 예외처리 */
+            if (form.id.value === "" ) {
+                alert('아이디 입력해주세요.')
+                return;
+            }
+            if (form.pw.value === "" ) {
+                alert('비밀번호 입력해주세요.')
+                return;
+            }
+
+            let data = {
+                    id: form.id.value,
+                    pw: form.pw.value,
+            }
+
+            const res = await axios({
+                method:'POST',  
+                url:'/login',
+                data
+            })
+
+            if (res.data) {
+
+                let resultBox = document.querySelector('.result-box');
+                resultBox.style.display = 'block';
+
+                if (res.data.resultcode === '01' || res.data.resultcode === '02') {
+
+                    resultBox.innerHTML =`
+                        <h1>axios post 로그인 결과</h1>
+                        <p style="color: red;" >${res.data.result}</p>
+                    `
+                }  else if (res.data.resultcode === '03') {
+
+                    resultBox.innerHTML =`
+                        <h1>axios post 로그인 결과</h1>
+                        <p style="color: blue;" >${res.data.result}</p>
+                    `
+                } else {
+                    resultBox.innerHTML =`
+                        <h1>axios post 로그인 결과</h1>
+                        <p style="color: red;" >'다시 시도해주세요.'</p>
+                    `
+                }
+
+            } else {
+                resultBox.innerHTML =`
+                        <h1>axios post 로그인 결과</h1>
+                        <p style="color: red;" >'다시 시도해주세요.'</p>
+                    `
+            }
+            console.log('data', res);
+        }
+
+    </script>
+    
+</body>
+</html>

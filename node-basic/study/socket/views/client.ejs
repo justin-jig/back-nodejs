@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Client</title>
+</head>
+
+<style>
+    ul{
+        width: 300px;
+        min-height: 300px;
+        box-sizing: border-box;
+        padding: 1em;
+        border: 1px solid #000;
+        border-radius: 5px;
+    }
+    ul > li {
+        list-style: none;
+    }
+</style>
+<body>
+
+    <ul>
+
+    </ul>
+    <form id="chat">
+        <input type="text" id="user" placeholder="사용자 명"/>
+        <input type="text" id="message" placeholder="채팅내용" />
+        <button type="submit">보내기</button>
+    </form>
+    
+    <script>
+        const socket = new WebSocket('ws://localhost:8000');
+        //form 가져오기
+        const chatForm = document.querySelector('#chat');
+        // url 가져오기
+        const ul = document.querySelector('ul');
+
+        //서버에 연결 요청
+        socket.addEventListener('open', (event) => {
+            //send() 함수는 벡엔드로 메세지 전송
+            socket.send('Hello Server');
+            console.log('서버에 연결되었습니다.');
+        });
+
+        socket.addEventListener("message", (event) => {
+            console.log('서버로부터 받은 메세지', `${event.data}`);
+            const li = document.createElement('li');
+        
+            if (event.data === 'Hello Server') {
+                li.textContent = `${event.data}`;
+            } else {
+                const msgObj = JSON.parse(event.data);
+                li.textContent = `${msgObj.user} : ${msgObj.msg}`;
+            }
+            ul.appendChild(li);
+        })
+
+        // 오류처리
+        socket.addEventListener('error', (event) => {
+            //send() 함수는 벡엔드로 메세지 전송
+            console.log('애러가 났습니다.');
+        });
+        // 종료처리
+        socket.addEventListener('close', (event) => {
+            //send() 함수는 벡엔드로 메세지 전송
+            console.log('소켓이 종료되었습니다.');
+        });
+        //////////// 폼 이벤트 //////////////////
+        chatForm.addEventListener('submit', (event) => {
+            event.preventDefault();
+            const msg = chatForm.querySelector('#message');
+            const user = chatForm.querySelector('#user');
+
+            if (user.value === '') return alert('사용자명을 입력해주세요.');
+            if (msg.value === '') return alert('메세지를 입력해주세요.');
+            
+            const sendObj = {
+                user: user.value,
+                msg : msg.value
+            }   
+            socket.send(JSON.stringify(sendObj));
+            msg.value = '';
+        })
+    
+    </script>
+</body>
+</html>

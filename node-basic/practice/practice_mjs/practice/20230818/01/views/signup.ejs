@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>sign up</title>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+</head>
+
+<style>
+    .error-box {
+        margin: 10px 0; color: red;
+        display: none;
+    }
+
+</style>
+<body>
+    
+    <h2>회원가입 페이지</h2>
+
+    <ul>
+        <li> <a href="/user/signin"> 로그인 페이지로 가기</a></li>
+        <li> <a href="/"> 홈으로 가기 </a></li>
+    </ul>
+  
+    
+    <div class="file-upload-bpx">
+        <form name="register">
+            <label for="id">아이디 : </label>
+            <input type="text" name="uid" id="id" required><br/>
+            
+            <label for="pw">비밀번호 : </label>
+            <input type="password" name="pw" id="pw" required><br/>
+
+            <label for="name">이름 : </label>
+            <input type="text" name="name" id="name" required><br/>
+        </form>
+
+        <br/>
+        <button type="button" onclick="reset()">리셋</button>
+        <button type="button" onclick="join()">회원가입</button>
+        
+    
+    </div>
+
+    <div class="join-result"></div>
+
+    <script>
+
+        function reset () { 
+          document.forms['register'].reset();
+        }
+
+        function join () {
+
+            const form = document.forms['register'];
+            if (form.id.value === "") return alert('아이디를 확인해주세요.'); 
+            if (form.pw.value === "") return alert('비밀번호를 확인해주세요.'); 
+            if (form.name.value === "") return alert('이름을 확인해주세요.'); 
+
+            axios({
+                method:'POST',
+                url : '/user/signup',
+                data : {
+                    userid : form.id.value,
+                    pw : form.pw.value,
+                    name: form.name.value
+                },
+                
+            }).then((res) => {
+                console.log('res',res);
+
+                if (res.data && res.data.resultcode === '20') {
+                    alert('회원가입이 되었습니다.')
+                    window.location.href = '/user/signin';
+                
+                } else if (res.data && res.data.resultcode === '01') {
+
+                    return alert('이미 있는 아이디입니다.');
+                    
+                }  else {
+                    
+                    return alert('잠시 후에 이용해주세요.')
+                }
+
+            }).catch(() => {
+                
+                return alert('잠시 후에 이용해주세요.')
+            })
+
+        }
+
+
+    </script>
+</body>
+</html>

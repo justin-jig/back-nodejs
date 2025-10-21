@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>multiplicationTables</title>
+</head>
+
+<script>    
+    let index = '<%= index %>'.split(',');
+    for ( let i = 0; i < index.length; i++){
+            console.log(index[i] + '단 구구단');
+            for (let j=1; j <= 9; j++) {
+                console.log(`${index[i] * j} * ${j}` + '=' + index[i] * j  )
+             } 
+    }
+
+</script>
+
+
+<body>
+    <div>
+        <% for( let i = 0; i < index.length; i++){ %>
+            <h5><%= index[i] %>단 구구단</h5>
+            <% for (let j=1; j <= 9; j++) { %>
+                <p><%= index[i] %> * <%= j %> = <%= index[i] * j %></p>
+            <%  } %>
+        <% } %>
+    </div>
+</body>
+</html>

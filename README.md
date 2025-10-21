@@ -18,9 +18,9 @@
 ##### 📂 폴더 구조
 | 구분 | 설명 |
 |------|------|
-| **node개념** | node 소스 |
-| **webpack** | webpack 구성 소스 |
-
+| **node-basic** | node 기본 개념 소스 |
+| **node-chapter** | node chapter별 예제 소스 |
+| **node-socket** | node socket 예제 소스 |
 
 ##### 🧾 버전 관리 및 기록
 > 버전별 기록.
@@ -33,7 +33,6 @@
 
 ## 🧑‍💻 Author
 **정인근 (Ingeun Jeong)**  
-📧 [justin-j@naver.com](mailto:justin-j@naver.com)  
-🧾 [note](https://justin-jig.github.io/justin-book)
-🏠 [git Profile](https://github.com/justin-jig)
-
+- 📧 [justin-j@naver.com](mailto:justin-j@naver.com)  
+- 🧾 [note](https://justin-jig.github.io/justin-book)
+- 🏠 [git Profile](https://github.com/justin-jig)

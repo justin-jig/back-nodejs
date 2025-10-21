@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Bootstrap demo</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+  
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+</head>
+
+  <style>
+    #bodyContentsBox {
+        width: 98%;
+        height: 200px; margin: auto;
+        border: 1px solid #ccc;
+        text-align: center;
+        background-color: rgb(244, 248, 250);
+        display: flex;
+        align-items: center; justify-content: center;
+    }   
+
+    #bodyContentsBox > .contents-box > h5 {
+        font-size: 1.5em; font-weight: bold;
+    }
+    #bodyContentsBox > .contents-box > p {
+        font-size: 0.9em;
+    }
+    
+  </style>
+  <body>
+   <!-- Button trigger modal -->
+    <button type="button" class="btn btn-primary" id="modal" data-bs-toggle="modal" data-bs-target="#exampleModal" style="display: none;">
+        Launch demo modal
+    </button>
+  
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header" style="background-color: #0dcaf0;">
+                <h5 class="modal-title" id="exampleModalLabel" style="color: #fff; font-size: 1.2em;">안내</h5>
+                <button type="button" class="btn-close" id="close" data-bs-dismiss="modal" aria-label="Close" style="color: #fff;"></button>
+            </div>
+            <div class="modal-body">
+                <div id="bodyContentsBox">
+                    <div class="contents-box">
+                        <h5>인터넷익스플로러(IE) 지원 종료 안내</h5>
+                        <P>인터넷익스플로러(IE) 서비스 지원이 <b>2022년 6월 15일 종료됨에</b><br/>
+                            따라 안전하고 원활한 LH청약센터 이용을 위해 크롬,사파리,엣지<br/>
+                            등의 웹브러우저를 이용해주시기 바랍니다.
+                        </P>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer" style="justify-content:flex-start !important">
+                <input type="checkbox" onchange="todayClose(this)" for="checkbox"/>
+                <label style="font-size: 1em;" id="checkbox">오늘은 그만보기</label>
+            </div>
+        </div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
+    <script>    
+
+        window.addEventListener("load", (e)=> {
+            if (!document.cookie) {
+                document.getElementById("modal").click();
+            } 
+        
+        })
+
+       
+        async function todayClose (e) {
+
+            const res = await axios({
+                method:'GET',  
+                url:`/setCookie`,
+            })  
+
+
+            if (res.data) {
+                document.getElementById('close').click();
+            } 
+        }
+    </script>  
+
+</body>
+
+</html>
