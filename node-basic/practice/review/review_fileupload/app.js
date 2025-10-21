@@ -34,8 +34,8 @@ app.use('/uploads', express.static(__dirname + '/uploads'));
 
 // aws 설정
 aws.config.update({
-    accessKeyId : 'AKIA6GQIYR7AT3DGOSF6',
-    secretAccessKey : "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",
+    accessKeyId : '',
+    secretAccessKey : "",
     region: 'ap-northeast-2'
 })
 // aws s3 인스턴스 생성
